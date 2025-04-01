@@ -1,5 +1,5 @@
 import { initEmployeeModule } from './employees.js';
-import { initCalendarModule, updateCalendarForWeek } from './calendar.js';
+import { initCalendarModule, updateCalendarForWeek, getDaysOfWeek } from './calendar.js';
 import { initShiftModule, getSchedule } from './shifts.js';
 import { calculateMonthlyHours } from './utils.js';
 
@@ -30,18 +30,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Esportazione PDF usando jsPDF da CDN
   document.getElementById('export-pdf').addEventListener('click', () => {
-    const { jsPDF } = window.jspdf; // usa la variabile globale
+    const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     const schedule = getSchedule();
-    const days = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
+    const days = getDaysOfWeek();
 
+    // Calcola le date effettive della settimana corrente (YYYY-MM-DD)
+    const currentWeekDates = (() => {
+      const result = [];
+      const start = new Date(currentWeekStart);
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(start);
+        d.setDate(start.getDate() + i);
+        result.push(d.toISOString().split('T')[0]);
+      }
+      return result;
+    })();
+
+    // Crea la tabella dati: per ogni dipendente, turno per ciascun giorno
     const data = Object.entries(schedule).map(([emp, shifts]) => {
-      return [emp, ...days.map(day => {
-        const dayEntry = Object.entries(shifts).find(([dateKey, value]) =>
-          new Date(dateKey).getDay() === days.indexOf(day)
-        );
-        return dayEntry ? dayEntry[1] : '';
-      })];
+      return [emp, ...currentWeekDates.map(date => shifts[date] || '')];
     });
 
     doc.text('Turni: ' + document.getElementById('current-week-label').textContent, 14, 16);
