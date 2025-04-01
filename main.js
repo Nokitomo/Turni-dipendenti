@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderWeekLabel();
   });
 
-  // Esportazione PDF adattata alla nuova struttura
+  // Esportazione PDF
   document.getElementById('export-pdf').addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })();
 
     const employeesSet = new Set();
-    // Crea una mappa dipendente -> giorno -> turno
     const dataMap = {};
 
     currentWeekDates.forEach((date, index) => {
@@ -81,6 +80,29 @@ document.addEventListener('DOMContentLoaded', () => {
       startY: 20
     });
     doc.output('dataurlnewwindow');
+  });
+
+  // Menu in alto a destra
+  const menuBtn = document.getElementById('menu-button');
+  const dropdown = document.getElementById('menu-dropdown');
+
+  menuBtn.addEventListener('click', () => {
+    dropdown.classList.toggle('hidden');
+  });
+
+  dropdown.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.dataset.target;
+
+      // Nasconde tutte le sezioni extra
+      ['employee-section', 'hours-section'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+
+      // Mostra la sezione selezionata
+      document.getElementById(targetId).classList.remove('hidden');
+      dropdown.classList.add('hidden');
+    });
   });
 });
 
