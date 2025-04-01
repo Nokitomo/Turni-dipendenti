@@ -1,7 +1,6 @@
 import { initEmployeeModule } from './employees.js';
 import { initCalendarModule, updateCalendarForWeek, getDaysOfWeek } from './calendar.js';
 import { initShiftModule, getSchedule } from './shifts.js';
-import { calculateMonthlyHours } from './utils.js';
 
 function getMonday(d) {
   d = new Date(d);
@@ -28,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderWeekLabel();
   });
 
-  // Esportazione PDF in una nuova scheda
+  // Esportazione PDF adattata alla nuova struttura
   document.getElementById('export-pdf').addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -47,19 +46,40 @@ document.addEventListener('DOMContentLoaded', () => {
       return result;
     })();
 
-    // Crea la tabella dati: per ogni dipendente, turno per ciascun giorno
-    const data = Object.entries(schedule).map(([emp, shifts]) => {
-      return [emp, ...currentWeekDates.map(date => shifts[date] || '')];
+    const employeesSet = new Set();
+    // Crea una mappa dipendente -> giorno -> turno
+    const dataMap = {};
+
+    currentWeekDates.forEach((date, index) => {
+      const dayLabel = days[index];
+      const shifts = schedule[date] || {};
+      for (const shiftType in shifts) {
+        const names = shifts[shiftType] || [];
+        names.forEach(name => {
+          employeesSet.add(name);
+          if (!dataMap[name]) dataMap[name] = {};
+          dataMap[name][dayLabel] = dataMap[name][dayLabel]
+            ? dataMap[name][dayLabel] + ', ' + shiftType
+            : shiftType;
+        });
+      }
+    });
+
+    const employees = Array.from(employeesSet);
+    const tableData = employees.map(name => {
+      const row = [name];
+      for (const day of days) {
+        row.push(dataMap[name]?.[day] || '');
+      }
+      return row;
     });
 
     doc.text('Turni: ' + document.getElementById('current-week-label').textContent, 14, 16);
     doc.autoTable({
       head: [['Dipendente', ...days]],
-      body: data,
+      body: tableData,
       startY: 20
     });
-
-    // Mostra il PDF in una nuova scheda (non scarica direttamente)
     doc.output('dataurlnewwindow');
   });
 });
