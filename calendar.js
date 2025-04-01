@@ -1,6 +1,5 @@
-// calendar.js aggiornato per gestire le date dinamiche della settimana
-
 import { getEmployees } from './employees.js';
+import { saveShift } from './shifts.js';
 
 const days = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
 
@@ -23,48 +22,50 @@ function renderCalendar(startDate) {
   const employees = getEmployees();
   const dates = getWeekDates(startDate);
 
-  employees.forEach(emp => {
-    const section = document.createElement('div');
-    section.classList.add('employee-calendar');
+  const table = document.createElement('table');
+  table.classList.add('calendar-table');
 
-    const title = document.createElement('h3');
-    title.textContent = emp;
-    section.appendChild(title);
+  const headerRow = document.createElement('tr');
+  headerRow.innerHTML = `<th>Giorno</th><th>Primo Turno</th><th>Secondo Turno</th>`;
+  table.appendChild(headerRow);
 
-    const weekRow = document.createElement('div');
-    weekRow.classList.add('calendar-row');
+  dates.forEach((dateObj, index) => {
+    const row = document.createElement('tr');
 
-    dates.forEach((dateObj, index) => {
-      const dayBox = document.createElement('div');
-      dayBox.classList.add('calendar-day');
+    const dayCell = document.createElement('td');
+    dayCell.textContent = `${days[index]} (${dateObj.dateString})`;
+    row.appendChild(dayCell);
 
-      const label = document.createElement('div');
-      label.classList.add('day-label');
-      label.textContent = `${days[index]} (${dateObj.dateString})`;
+    ['primo', 'secondo'].forEach(turno => {
+      const cell = document.createElement('td');
 
-      const shiftSelect = document.createElement('select');
-      shiftSelect.dataset.employee = emp;
-      shiftSelect.dataset.day = days[index];
-      shiftSelect.dataset.date = dateObj.key;
-      shiftSelect.innerHTML = `
-        <option value="">-- Assegna turno --</option>
-        <option value="primo">Primo Turno (08:00-14:00)</option>
-        <option value="secondo">Secondo Turno (14:00-20:00)</option>
-        <option value="doppio">Doppio Turno (08:00-20:00)</option>
-        <option value="ferie">Ferie</option>
-        <option value="riposo">Riposo</option>
-        <option value="festivo">Festivo</option>
-        <option value="malattia">Malattia</option>
-      `;
+      const select = document.createElement('select');
+      select.multiple = true;
+      select.dataset.date = dateObj.key;
+      select.dataset.shift = turno;
+      select.classList.add('shift-select');
 
-      dayBox.appendChild(label);
-      dayBox.appendChild(shiftSelect);
-      weekRow.appendChild(dayBox);
+      employees.forEach(emp => {
+        const option = document.createElement('option');
+        option.value = emp;
+        option.textContent = emp;
+        cell.appendChild(select);
+        select.appendChild(option);
+      });
+
+      select.addEventListener('change', () => {
+        const selected = Array.from(select.selectedOptions).map(opt => opt.value);
+        saveShift(dateObj.key, turno, selected);
+      });
+
+      cell.appendChild(select);
+      row.appendChild(cell);
     });
 
-    section.appendChild(weekRow);
-    calendarEl.appendChild(section);
+    table.appendChild(row);
   });
+
+  calendarEl.appendChild(table);
 }
 
 function getWeekDates(startDate) {
