@@ -154,7 +154,7 @@ button:hover {
 }
 
 #menu-dropdown {
-  display: none; /* cambiato da display: flex a display: none */
+  display: none; /* di default è nascosto */
   flex-direction: column;
   background-color: #ffffff;
   border: 1px solid #ccc;
@@ -180,7 +180,12 @@ button:hover {
 }
 
 .hidden {
-  display: none !important; /* forza il nascondimento anche se altri stili lo ignorano */
+  display: none !important;
+}
+
+/* NUOVA REGOLA: mostra il menu quando non ha la classe "hidden" */
+#menu-dropdown:not(.hidden) {
+  display: flex;
 }
 
 @media (max-width: 768px) {
