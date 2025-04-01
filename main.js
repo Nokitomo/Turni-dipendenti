@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const schedule = getSchedule();
     const days = getDaysOfWeek();
 
-    // Calcola le date effettive della settimana corrente (YYYY-MM-DD)
     const currentWeekDates = (() => {
       const result = [];
       const start = new Date(currentWeekStart);
@@ -94,16 +93,42 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       const targetId = btn.dataset.target;
 
-      // Nasconde tutte le sezioni extra
-      ['employee-section', 'hours-section'].forEach(id => {
+      // Nasconde tutte le sezioni
+      [
+        'employee-section',
+        'hours-section',
+        'cleanup-section',
+        'calendar-section',
+        'week-navigation',
+        'export-section'
+      ].forEach(id => {
         document.getElementById(id).classList.add('hidden');
       });
 
-      // Mostra la sezione selezionata
-      document.getElementById(targetId).classList.remove('hidden');
+      // Seleziona la pagina giusta
+      if (targetId === 'calendar-view') {
+        ['calendar-section', 'week-navigation', 'export-section'].forEach(id => {
+          document.getElementById(id).classList.remove('hidden');
+        });
+      } else {
+        document.getElementById(targetId).classList.remove('hidden');
+      }
+
       dropdown.classList.add('hidden');
     });
   });
+
+  // Pulizia automatica (opzionale, se usi la funzione)
+  const cleanupSelect = document.getElementById('cleanup-select');
+  if (cleanupSelect) {
+    cleanupSelect.addEventListener('change', () => {
+      const value = cleanupSelect.value;
+      localStorage.setItem('cleanup-policy', value);
+      cleanOldData();
+    });
+
+    cleanOldData();
+  }
 });
 
 function formatDate(date) {
@@ -121,4 +146,28 @@ function renderWeekLabel() {
     formatDate(currentWeekStart) + ' - ' + formatDate(endDate);
 
   updateCalendarForWeek(currentWeekStart);
+}
+
+function cleanOldData() {
+  const months = parseInt(localStorage.getItem('cleanup-policy'));
+  if (isNaN(months)) return;
+
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - months);
+  const cutoffKey = cutoff.toISOString().split('T')[0];
+
+  let schedule = JSON.parse(localStorage.getItem('schedule')) || {};
+  let modified = false;
+
+  for (const date in schedule) {
+    if (date < cutoffKey) {
+      delete schedule[date];
+      modified = true;
+    }
+  }
+
+  if (modified) {
+    localStorage.setItem('schedule', JSON.stringify(schedule));
+    location.reload();
+  }
 }
