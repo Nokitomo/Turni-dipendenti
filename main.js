@@ -1,5 +1,3 @@
-// main.js aggiornato con gestione settimana e esportazione PDF
-
 import { initEmployeeModule } from './employees.js';
 import { initCalendarModule, updateCalendarForWeek } from './calendar.js';
 import { initShiftModule, getSchedule } from './shifts.js';
@@ -30,14 +28,20 @@ document.addEventListener('DOMContentLoaded', () => {
     renderWeekLabel();
   });
 
-  // Esportazione PDF
+  // Esportazione PDF usando jsPDF da CDN
   document.getElementById('export-pdf').addEventListener('click', () => {
+    const { jsPDF } = window.jspdf; // usa la variabile globale
     const doc = new jsPDF();
     const schedule = getSchedule();
     const days = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
 
     const data = Object.entries(schedule).map(([emp, shifts]) => {
-      return [emp, ...days.map(day => shifts[day] || '')];
+      return [emp, ...days.map(day => {
+        const dayEntry = Object.entries(shifts).find(([dateKey, value]) =>
+          new Date(dateKey).getDay() === days.indexOf(day)
+        );
+        return dayEntry ? dayEntry[1] : '';
+      })];
     });
 
     doc.text('Turni: ' + document.getElementById('current-week-label').textContent, 14, 16);
