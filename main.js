@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const schedule = getSchedule();
     const days = getDaysOfWeek();
 
-    // Calcola le date effettive della settimana corrente (YYYY-MM-DD)
     const currentWeekDates = (() => {
       const result = [];
       const start = new Date(currentWeekStart);
@@ -95,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const targetId = btn.dataset.target;
 
       // Nasconde tutte le sezioni extra
-      ['employee-section', 'hours-section'].forEach(id => {
+      ['employee-section', 'hours-section', 'cleanup-section'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
       });
 
@@ -104,6 +103,15 @@ document.addEventListener('DOMContentLoaded', () => {
       dropdown.classList.add('hidden');
     });
   });
+
+  // Gestione pulizia automatica
+  document.getElementById('cleanup-select').addEventListener('change', () => {
+    const value = document.getElementById('cleanup-select').value;
+    localStorage.setItem('cleanup-policy', value);
+    cleanOldData();
+  });
+
+  cleanOldData(); // Pulizia all'avvio, se configurata
 });
 
 function formatDate(date) {
@@ -121,4 +129,28 @@ function renderWeekLabel() {
     formatDate(currentWeekStart) + ' - ' + formatDate(endDate);
 
   updateCalendarForWeek(currentWeekStart);
+}
+
+function cleanOldData() {
+  const months = parseInt(localStorage.getItem('cleanup-policy'));
+  if (isNaN(months)) return; // "off" o non selezionato
+
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - months);
+  const cutoffKey = cutoff.toISOString().split('T')[0];
+
+  let schedule = JSON.parse(localStorage.getItem('schedule')) || {};
+  let modified = false;
+
+  for (const date in schedule) {
+    if (date < cutoffKey) {
+      delete schedule[date];
+      modified = true;
+    }
+  }
+
+  if (modified) {
+    localStorage.setItem('schedule', JSON.stringify(schedule));
+    location.reload();
+  }
 }
