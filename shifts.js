@@ -5,7 +5,7 @@ const shiftHours = {
   secondo: 6
 };
 
-let schedule = {}; // { data: { primo: [], secondo: [] } }
+let schedule = JSON.parse(localStorage.getItem('schedule')) || {};
 
 export function initShiftModule() {
   updateWorkedHours();
@@ -14,11 +14,15 @@ export function initShiftModule() {
 export function saveShift(date, shiftType, employeeList) {
   if (!schedule[date]) schedule[date] = {};
   schedule[date][shiftType] = employeeList;
+
+  localStorage.setItem('schedule', JSON.stringify(schedule));
   updateWorkedHours();
 }
 
 function updateWorkedHours() {
   const hoursDiv = document.getElementById('worked-hours');
+  if (!hoursDiv) return;
+
   hoursDiv.innerHTML = '';
   const employees = getEmployees();
 
@@ -53,4 +57,5 @@ export function clearEmployeeData(emp) {
       schedule[date][shift] = schedule[date][shift].filter(e => e !== emp);
     }
   }
+  localStorage.setItem('schedule', JSON.stringify(schedule));
 }

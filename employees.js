@@ -1,7 +1,7 @@
 import { initCalendarModule } from './calendar.js';
 import { initShiftModule, clearEmployeeData } from './shifts.js';
 
-let employees = [];
+let employees = JSON.parse(localStorage.getItem('employees')) || [];
 
 export function initEmployeeModule() {
   const input = document.getElementById('employee-name');
@@ -15,7 +15,7 @@ export function initEmployeeModule() {
       renderEmployeeList();
       input.value = '';
 
-      // Ricostruisce calendario e turni
+      localStorage.setItem('employees', JSON.stringify(employees));
       initCalendarModule();
       initShiftModule();
     }
@@ -35,8 +35,7 @@ export function initEmployeeModule() {
         employees.splice(index, 1);
         clearEmployeeData(emp);
         renderEmployeeList();
-
-        // Aggiorna calendario e turni dopo la rimozione
+        localStorage.setItem('employees', JSON.stringify(employees));
         initCalendarModule();
         initShiftModule();
       };
@@ -45,6 +44,8 @@ export function initEmployeeModule() {
       list.appendChild(li);
     });
   }
+
+  renderEmployeeList();
 }
 
 export function getEmployees() {
