@@ -1,37 +1,19 @@
-// shifts.js aggiornato con reset e modifica ore + gestione per data
-
 import { getEmployees } from './employees.js';
-import { getDaysOfWeek } from './calendar.js';
 
 const shiftHours = {
   primo: 6,
-  secondo: 6,
-  doppio: 12,
-  ferie: 0,
-  riposo: 0,
-  festivo: 0,
-  malattia: 0
+  secondo: 6
 };
 
-let schedule = {}; // { nomeDipendente: { data: turno } }
-let manualHours = {}; // { nomeDipendente: numero }
+let schedule = {}; // { data: { primo: [], secondo: [] } }
 
 export function initShiftModule() {
-  document.getElementById('calendar').addEventListener('change', saveShift);
   updateWorkedHours();
 }
 
-function saveShift(e) {
-  const select = e.target;
-  if (select.tagName !== 'SELECT') return;
-
-  const emp = select.dataset.employee;
-  const date = select.dataset.date;
-  const value = select.value;
-
-  if (!schedule[emp]) schedule[emp] = {};
-  schedule[emp][date] = value;
-
+export function saveShift(date, shiftType, employeeList) {
+  if (!schedule[date]) schedule[date] = {};
+  schedule[date][shiftType] = employeeList;
   updateWorkedHours();
 }
 
@@ -40,53 +22,25 @@ function updateWorkedHours() {
   hoursDiv.innerHTML = '';
   const employees = getEmployees();
 
-  employees.forEach(emp => {
-    let total = 0;
-    if (manualHours[emp] != null) {
-      total = manualHours[emp];
-    } else if (schedule[emp]) {
-      for (let date in schedule[emp]) {
-        const shift = schedule[emp][date];
-        total += shiftHours[shift] || 0;
-      }
+  const totals = {};
+  employees.forEach(emp => (totals[emp] = 0));
+
+  for (const date in schedule) {
+    for (const shift in schedule[date]) {
+      const empList = schedule[date][shift];
+      empList.forEach(emp => {
+        if (totals[emp] != null) {
+          totals[emp] += shiftHours[shift] || 0;
+        }
+      });
     }
+  }
 
-    const container = document.createElement('div');
-    container.style.marginBottom = '1rem';
-
+  for (const emp in totals) {
     const p = document.createElement('p');
-    p.textContent = `${emp}: ${total} ore lavorate nel periodo`;
-    container.appendChild(p);
-
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.placeholder = 'Modifica ore';
-    input.style.marginRight = '0.5rem';
-    input.value = manualHours[emp] ?? '';
-    input.addEventListener('change', () => {
-      const val = parseFloat(input.value);
-      if (!isNaN(val)) {
-        manualHours[emp] = val;
-      } else {
-        delete manualHours[emp];
-      }
-      updateWorkedHours();
-    });
-    container.appendChild(input);
-
-    const resetBtn = document.createElement('button');
-    resetBtn.textContent = 'Reset';
-    resetBtn.style.backgroundColor = '#e67e22';
-    resetBtn.addEventListener('click', () => {
-      delete manualHours[emp];
-      delete schedule[emp];
-      updateWorkedHours();
-      document.querySelectorAll(`select[data-employee='${emp}']`).forEach(s => s.value = '');
-    });
-    container.appendChild(resetBtn);
-
-    hoursDiv.appendChild(container);
-  });
+    p.textContent = `${emp}: ${totals[emp]} ore lavorate`;
+    hoursDiv.appendChild(p);
+  }
 }
 
 export function getSchedule() {
@@ -94,6 +48,9 @@ export function getSchedule() {
 }
 
 export function clearEmployeeData(emp) {
-  delete schedule[emp];
-  delete manualHours[emp];
+  for (const date in schedule) {
+    for (const shift in schedule[date]) {
+      schedule[date][shift] = schedule[date][shift].filter(e => e !== emp);
+    }
+  }
 }
