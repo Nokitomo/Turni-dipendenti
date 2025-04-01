@@ -1,0 +1,135 @@
+/* style.css aggiornato con responsive layout e gestione migliorata */
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f8;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  text-align: center;
+  color: #2c3e50;
+}
+
+input[type="text"] {
+  padding: 0.5rem;
+  font-size: 1rem;
+  width: 250px;
+  margin-right: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+#employee-list {
+  margin-top: 1rem;
+  list-style-type: none;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+#employee-list li {
+  padding: 0.5rem;
+  background-color: #ecf0f1;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.employee-calendar {
+  background-color: #f0f4f8;
+  border-radius: 10px;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.calendar-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.calendar-day {
+  padding: 1rem;
+  background-color: #e3e8ee;
+  border-radius: 8px;
+  min-width: 120px;
+  flex: 1;
+  text-align: center;
+}
+
+.day-label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+#worked-hours {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #eaf1f8;
+  border-radius: 8px;
+  min-height: 100px;
+}
+
+#week-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+#export-section {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .calendar-row {
+    flex-direction: column;
+  }
+
+  #employee-list li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #calendar {
+    overflow-x: auto;
+  }
+}
