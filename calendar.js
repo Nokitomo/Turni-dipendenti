@@ -1,5 +1,5 @@
 import { getEmployees } from './employees.js';
-import { saveShift } from './shifts.js';
+import { saveShift, getSchedule } from './shifts.js';
 
 const days = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
 
@@ -45,10 +45,14 @@ function renderCalendar(startDate) {
       select.dataset.shift = turno;
       select.classList.add('shift-select');
 
+      
+      const schedule = getSchedule();
+      const saved = schedule[dateObj.key]?.[turno] || [];
       employees.forEach(emp => {
         const option = document.createElement('option');
         option.value = emp;
         option.textContent = emp;
+        if (saved.includes(emp)) option.selected = true;
         cell.appendChild(select);
         select.appendChild(option);
       });
