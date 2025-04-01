@@ -27,14 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
     renderWeekLabel();
   });
 
-  // Esportazione PDF
   document.getElementById('export-pdf').addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     const schedule = getSchedule();
     const days = getDaysOfWeek();
 
-    // Calcola le date effettive della settimana corrente (YYYY-MM-DD)
     const currentWeekDates = (() => {
       const result = [];
       const start = new Date(currentWeekStart);
@@ -82,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
     doc.output('dataurlnewwindow');
   });
 
-  // Menu in alto a destra
   const menuBtn = document.getElementById('menu-button');
   const dropdown = document.getElementById('menu-dropdown');
 
@@ -94,16 +91,44 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       const targetId = btn.dataset.target;
 
-      // Nasconde tutte le sezioni extra
-      ['employee-section', 'hours-section'].forEach(id => {
+      [
+        'employee-section',
+        'hours-section',
+        'cleanup-section',
+        'calendar-section',
+        'week-navigation',
+        'export-section'
+      ].forEach(id => {
         document.getElementById(id).classList.add('hidden');
       });
 
-      // Mostra la sezione selezionata
-      document.getElementById(targetId).classList.remove('hidden');
+      if (targetId === 'calendar-section') {
+        ['calendar-section', 'week-navigation', 'export-section'].forEach(id => {
+          document.getElementById(id).classList.remove('hidden');
+        });
+      } else {
+        document.getElementById(targetId).classList.remove('hidden');
+      }
+
       dropdown.classList.add('hidden');
     });
   });
+
+  const cleanupSelect = document.getElementById('cleanup-select');
+  if (cleanupSelect) {
+    const savedPolicy = localStorage.getItem('cleanup-policy');
+    if (savedPolicy) {
+      cleanupSelect.value = savedPolicy;
+    }
+
+    cleanupSelect.addEventListener('change', () => {
+      const value = cleanupSelect.value;
+      localStorage.setItem('cleanup-policy', value);
+      cleanOldData();
+    });
+
+    cleanOldData();
+  }
 });
 
 function formatDate(date) {
@@ -121,4 +146,28 @@ function renderWeekLabel() {
     formatDate(currentWeekStart) + ' - ' + formatDate(endDate);
 
   updateCalendarForWeek(currentWeekStart);
+}
+
+function cleanOldData() {
+  const months = parseInt(localStorage.getItem('cleanup-policy'));
+  if (isNaN(months)) return;
+
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - months);
+  const cutoffKey = cutoff.toISOString().split('T')[0];
+
+  let schedule = JSON.parse(localStorage.getItem('schedule')) || {};
+  let modified = false;
+
+  for (const date in schedule) {
+    if (date < cutoffKey) {
+      delete schedule[date];
+      modified = true;
+    }
+  }
+
+  if (modified) {
+    localStorage.setItem('schedule', JSON.stringify(schedule));
+    location.reload();
+  }
 }
