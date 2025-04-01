@@ -7,7 +7,11 @@
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
+
 <body>
   <div class="container">
     <h1>Gestione Turni Dipendenti</h1>
@@ -26,7 +30,11 @@
 
     <section id="week-navigation">
       <button id="prev-week">Settimana Precedente</button>
-      <span id="current-week-label"></span>
+      
+    <span id="current-week-label"></span>
+    <button id="calendar-icon" title="Seleziona una settimana" style="font-size: 1.2rem; margin-left: 10px;">📅</button>
+    <div id="calendar-popup" class="hidden"></div>
+    
       <button id="next-week">Settimana Successiva</button>
     </section>
 
