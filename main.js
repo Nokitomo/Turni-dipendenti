@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderWeekLabel();
   });
 
-  // Esportazione PDF usando jsPDF da CDN
+  // Esportazione PDF in una nuova scheda
   document.getElementById('export-pdf').addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -58,7 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
       body: data,
       startY: 20
     });
-    doc.save('turni_settimana.pdf');
+
+    // Mostra il PDF in una nuova scheda (non scarica direttamente)
+    doc.output('dataurlnewwindow');
   });
 });
 
