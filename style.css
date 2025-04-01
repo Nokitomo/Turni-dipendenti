@@ -172,6 +172,7 @@ button:hover {
   text-align: left;
   cursor: pointer;
   width: 150px;
+  color: #2c3e50; /* <-- Aggiunto per rendere il testo visibile */
 }
 
 #menu-dropdown button:hover {
