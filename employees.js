@@ -1,5 +1,3 @@
-// employees.js aggiornato per pulire i dati dei turni quando un dipendente viene rimosso
-
 import { initCalendarModule } from './calendar.js';
 import { initShiftModule, clearEmployeeData } from './shifts.js';
 
