@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(id).classList.add('hidden');
       });
 
-      // Seleziona la pagina giusta
+      // Seleziona la sezione corretta
       if (targetId === 'calendar-view') {
         ['calendar-section', 'week-navigation', 'export-section'].forEach(id => {
           document.getElementById(id).classList.remove('hidden');
@@ -114,11 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(targetId).classList.remove('hidden');
       }
 
+      // Chiude il menu dopo la selezione
       dropdown.classList.add('hidden');
     });
   });
 
-  // Pulizia automatica (opzionale, se usi la funzione)
+  // Pulizia automatica (opzionale)
   const cleanupSelect = document.getElementById('cleanup-select');
   if (cleanupSelect) {
     cleanupSelect.addEventListener('change', () => {

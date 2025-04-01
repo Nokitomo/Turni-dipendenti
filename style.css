@@ -154,7 +154,7 @@ button:hover {
 }
 
 #menu-dropdown {
-  display: flex;
+  display: none;
   flex-direction: column;
   background-color: #ffffff;
   border: 1px solid #ccc;
@@ -165,6 +165,10 @@ button:hover {
   z-index: 10;
 }
 
+#menu-dropdown:not(.hidden) {
+  display: flex;
+}
+
 #menu-dropdown button {
   background: none;
   border: none;
@@ -172,6 +176,7 @@ button:hover {
   text-align: left;
   cursor: pointer;
   width: 150px;
+  color: #2c3e50; /* testo visibile */
 }
 
 #menu-dropdown button:hover {
@@ -179,7 +184,7 @@ button:hover {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 @media (max-width: 768px) {
