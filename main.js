@@ -5,7 +5,6 @@ import { initCalendarModule, updateCalendarForWeek } from './calendar.js';
 import { initShiftModule, getSchedule } from './shifts.js';
 import { calculateMonthlyHours } from './utils.js';
 
-// Spostata qui sopra
 function getMonday(d) {
   d = new Date(d);
   const day = d.getDay();
@@ -20,6 +19,35 @@ document.addEventListener('DOMContentLoaded', () => {
   initCalendarModule();
   initShiftModule();
   renderWeekLabel();
+
+  document.getElementById('prev-week').addEventListener('click', () => {
+    currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+    renderWeekLabel();
+  });
+
+  document.getElementById('next-week').addEventListener('click', () => {
+    currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+    renderWeekLabel();
+  });
+
+  // Esportazione PDF
+  document.getElementById('export-pdf').addEventListener('click', () => {
+    const doc = new jsPDF();
+    const schedule = getSchedule();
+    const days = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
+
+    const data = Object.entries(schedule).map(([emp, shifts]) => {
+      return [emp, ...days.map(day => shifts[day] || '')];
+    });
+
+    doc.text('Turni: ' + document.getElementById('current-week-label').textContent, 14, 16);
+    doc.autoTable({
+      head: [['Dipendente', ...days]],
+      body: data,
+      startY: 20
+    });
+    doc.save('turni_settimana.pdf');
+  });
 });
 
 function formatDate(date) {
@@ -38,35 +66,3 @@ function renderWeekLabel() {
 
   updateCalendarForWeek(currentWeekStart);
 }
-
-document.getElementById('prev-week').addEventListener('click', () => {
-  currentWeekStart.setDate(currentWeekStart.getDate() - 7);
-  renderWeekLabel();
-});
-
-document.getElementById('next-week').addEventListener('click', () => {
-  currentWeekStart.setDate(currentWeekStart.getDate() + 7);
-  renderWeekLabel();
-});
-
-// Esportazione PDF
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-
-document.getElementById('export-pdf').addEventListener('click', () => {
-  const doc = new jsPDF();
-  const schedule = getSchedule();
-  const days = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
-
-  const data = Object.entries(schedule).map(([emp, shifts]) => {
-    return [emp, ...days.map(day => shifts[day] || '')];
-  });
-
-  doc.text('Turni: ' + document.getElementById('current-week-label').textContent, 14, 16);
-  doc.autoTable({
-    head: [['Dipendente', ...days]],
-    body: data,
-    startY: 20
-  });
-  doc.save('turni_settimana.pdf');
-});
