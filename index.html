@@ -12,13 +12,14 @@
   <div class="container">
     <h1>Gestione Turni Dipendenti</h1>
 
-    <section id="employee-section">
-      <h2>Aggiungi Dipendente</h2>
-      <label for="employee-name">Nome:</label>
-      <input type="text" id="employee-name" placeholder="Nome dipendente" />
-      <button id="add-employee">Aggiungi</button>
-      <ul id="employee-list"></ul>
-    </section>
+    <!-- Menu in alto a destra -->
+    <nav id="main-menu">
+      <button id="menu-button">☰ Menu</button>
+      <div id="menu-dropdown" class="hidden">
+        <button data-target="employee-section">Dipendenti</button>
+        <button data-target="hours-section">Ore Dipendenti</button>
+      </div>
+    </nav>
 
     <section id="week-navigation">
       <button id="prev-week">Settimana Precedente</button>
@@ -31,7 +32,15 @@
       <div id="calendar"></div>
     </section>
 
-    <section id="hours-section">
+    <section id="employee-section" class="hidden">
+      <h2>Aggiungi Dipendente</h2>
+      <label for="employee-name">Nome:</label>
+      <input type="text" id="employee-name" placeholder="Nome dipendente" />
+      <button id="add-employee">Aggiungi</button>
+      <ul id="employee-list"></ul>
+    </section>
+
+    <section id="hours-section" class="hidden">
       <h2>Ore Lavorate</h2>
       <div id="worked-hours"></div>
     </section>
