@@ -34,9 +34,9 @@
       <span id="current-week-label"></span>
       <button id="calendar-icon" title="Seleziona una settimana" style="font-size: 1.2rem; margin-left: 10px;">📅</button>
       
-      <!-- Popup calendario con input nascosto -->
+      <!-- Popup calendario con input visibile ma nascosto -->
       <div id="calendar-popup" class="hidden">
-        <input id="calendar-selector" type="text" style="display: none;" />
+        <input id="calendar-selector" type="text" style="visibility: hidden; height: 0; position: absolute;" />
       </div>
 
       <button id="next-week">Settimana Successiva</button>
@@ -76,7 +76,7 @@
     </section>
   </div>
 
-  <!-- Script spostato in fondo -->
+  <!-- Script caricato in fondo al body -->
   <script type="module" src="main.js"></script>
 </body>
 </html>
