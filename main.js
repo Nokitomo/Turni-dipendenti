@@ -133,13 +133,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // === Calendario popup con flatpickr ===
   const calendarIcon = document.getElementById('calendar-icon');
   const calendarPopup = document.getElementById('calendar-popup');
+  const calendarInput = document.getElementById('calendar-selector');
 
-  if (calendarIcon && calendarPopup) {
-    flatpickr(calendarPopup, {
+  if (calendarIcon && calendarPopup && calendarInput) {
+    flatpickr(calendarInput, {
       inline: true,
       locale: 'it',
       weekNumbers: true,
-      onChange: function(selectedDates) {
+      onChange: function (selectedDates) {
         if (selectedDates.length > 0) {
           const monday = getMonday(selectedDates[0]);
           currentWeekStart = new Date(monday);
@@ -150,11 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     calendarIcon.addEventListener('click', () => {
-      if (calendarPopup.classList.contains('hidden')) {
-        calendarPopup.classList.remove('hidden');
-      } else {
-        calendarPopup.classList.add('hidden');
-      }
+      calendarPopup.classList.toggle('hidden');
     });
 
     document.addEventListener('click', (event) => {
