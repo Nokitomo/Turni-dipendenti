@@ -129,6 +129,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cleanOldData();
   }
+
+  // === Calendario popup con flatpickr ===
+  const calendarIcon = document.getElementById('calendar-icon');
+  const calendarPopup = document.getElementById('calendar-popup');
+
+  if (calendarIcon && calendarPopup) {
+    flatpickr(calendarPopup, {
+      inline: true,
+      locale: 'it',
+      weekNumbers: true,
+      onChange: function(selectedDates) {
+        if (selectedDates.length > 0) {
+          const monday = getMonday(selectedDates[0]);
+          currentWeekStart = new Date(monday);
+          renderWeekLabel();
+          calendarPopup.classList.add('hidden');
+        }
+      }
+    });
+
+    calendarIcon.addEventListener('click', () => {
+      if (calendarPopup.classList.contains('hidden')) {
+        calendarPopup.classList.remove('hidden');
+      } else {
+        calendarPopup.classList.add('hidden');
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (
+        !calendarPopup.contains(event.target) &&
+        !calendarIcon.contains(event.target)
+      ) {
+        calendarPopup.classList.add('hidden');
+      }
+    });
+  }
 });
 
 function formatDate(date) {
