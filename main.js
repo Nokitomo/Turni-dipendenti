@@ -130,28 +130,37 @@ document.addEventListener('DOMContentLoaded', () => {
     cleanOldData();
   }
 
-  // === Calendario popup con flatpickr ===
+  // === Calendario popup (inizializzazione stabile al primo click) ===
   const calendarIcon = document.getElementById('calendar-icon');
   const calendarPopup = document.getElementById('calendar-popup');
   const calendarInput = document.getElementById('calendar-selector');
 
-  if (calendarIcon && calendarPopup && calendarInput) {
-    flatpickr(calendarInput, {
-      inline: true,
-      locale: 'it',
-      weekNumbers: true,
-      onChange: function (selectedDates) {
-        if (selectedDates.length > 0) {
-          const monday = getMonday(selectedDates[0]);
-          currentWeekStart = new Date(monday);
-          renderWeekLabel();
-          calendarPopup.classList.add('hidden');
-        }
-      }
-    });
+  let flatpickrInstance = null;
 
+  if (calendarIcon && calendarPopup && calendarInput) {
     calendarIcon.addEventListener('click', () => {
-      calendarPopup.classList.toggle('hidden');
+      if (calendarPopup.classList.contains('hidden')) {
+        calendarPopup.classList.remove('hidden');
+
+        if (!flatpickrInstance) {
+          flatpickrInstance = flatpickr(calendarInput, {
+            inline: true,
+            locale: 'it',
+            weekNumbers: true,
+            defaultDate: new Date(),
+            onChange: function (selectedDates) {
+              if (selectedDates.length > 0) {
+                const monday = getMonday(selectedDates[0]);
+                currentWeekStart = new Date(monday);
+                renderWeekLabel();
+                calendarPopup.classList.add('hidden');
+              }
+            }
+          });
+        }
+      } else {
+        calendarPopup.classList.add('hidden');
+      }
     });
 
     document.addEventListener('click', (event) => {

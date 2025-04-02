@@ -217,3 +217,11 @@ button:hover {
   min-width: 250px;
   min-height: 300px;
 }
+
+/* Input nascosto ma visibile per flatpickr */
+#calendar-popup input {
+  opacity: 0;
+  height: 0;
+  pointer-events: none;
+  position: absolute;
+}
