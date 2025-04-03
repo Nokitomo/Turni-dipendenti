@@ -105,12 +105,29 @@ button:hover {
   min-height: 100px;
 }
 
+/* Sezione di navigazione della settimana */
 #week-navigation {
   display: flex;
+  flex-wrap: wrap; /* Permette agli elementi di andare a capo se necessario */
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
   margin: 1rem 0;
+}
+
+#week-navigation button {
+  white-space: nowrap; /* Evita che il testo vada a capo internamente */
+  flex: 0 1 auto;
+}
+
+#current-week-label {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+#calendar-icon {
+  margin-left: 10px;
+  font-size: 1.2rem;
 }
 
 #export-section {
@@ -199,6 +216,23 @@ button:hover {
 
   #calendar {
     overflow-x: auto;
+  }
+}
+
+/* Media Query per schermi piccoli */
+@media (max-width: 480px) {
+  #week-navigation {
+    flex-direction: column;
+  }
+  
+  #week-navigation button,
+  #current-week-label {
+    width: 100%;
+    text-align: center;
+  }
+  
+  #week-navigation button {
+    font-size: 0.9rem;
   }
 }
 
