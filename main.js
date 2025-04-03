@@ -10,7 +10,7 @@ function getMonday(d) {
 }
 
 let currentWeekStart = getMonday(new Date());
-let flatpickrInstance = null; // Rende l'istanza accessibile globalmente
+let flatpickrInstance = null; // Istanza per il popup calendario
 
 document.addEventListener('DOMContentLoaded', () => {
   initEmployeeModule();
@@ -18,19 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
   initShiftModule();
   renderWeekLabel();
 
-  // Navigazione settimanale: bottone "◀" (settimana precedente)
+  // Navigazione settimanale
   document.getElementById('prev-week').addEventListener('click', () => {
     currentWeekStart.setDate(currentWeekStart.getDate() - 7);
     renderWeekLabel();
   });
-
-  // Navigazione settimanale: bottone "▶" (settimana successiva)
   document.getElementById('next-week').addEventListener('click', () => {
     currentWeekStart.setDate(currentWeekStart.getDate() + 7);
     renderWeekLabel();
   });
-
-  // Bottone "Oggi": torna alla settimana corrente e aggiorna la data nel popup del calendario
   document.getElementById('today').addEventListener('click', () => {
     currentWeekStart = getMonday(new Date());
     renderWeekLabel();
@@ -39,13 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Esportazione PDF
+  // Esportazione PDF (già implementata)
   document.getElementById('export-pdf').addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     const schedule = getSchedule();
     const days = getDaysOfWeek();
-
     const currentWeekDates = (() => {
       const result = [];
       const start = new Date(currentWeekStart);
@@ -56,10 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       return result;
     })();
-
     const employeesSet = new Set();
     const dataMap = {};
-
     currentWeekDates.forEach((date, index) => {
       const dayLabel = days[index];
       const shifts = schedule[date] || {};
@@ -74,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     });
-
     const employees = Array.from(employeesSet);
     const tableData = employees.map(name => {
       const row = [name];
@@ -83,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       return row;
     });
-
     doc.text('Turni: ' + document.getElementById('current-week-label').textContent, 14, 16);
     doc.autoTable({
       head: [['Dipendente', ...days]],
@@ -93,14 +84,12 @@ document.addEventListener('DOMContentLoaded', () => {
     doc.output('dataurlnewwindow');
   });
 
-  // Gestione del menu in alto a destra
+  // Gestione del menu
   const menuBtn = document.getElementById('menu-button');
   const dropdown = document.getElementById('menu-dropdown');
-
   menuBtn.addEventListener('click', () => {
     dropdown.classList.toggle('hidden');
   });
-
   dropdown.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => {
       const targetId = btn.dataset.target;
@@ -137,10 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const calendarIcon = document.getElementById('calendar-icon');
   const calendarPopup = document.getElementById('calendar-popup');
   const calendarInput = document.getElementById('calendar-selector');
-
   if (calendarIcon && calendarPopup && calendarInput) {
     calendarIcon.addEventListener('click', (e) => {
-      e.stopPropagation(); // Impedisci la propagazione del click per non chiudere subito il popup
+      e.stopPropagation();
       if (calendarPopup.classList.contains('hidden')) {
         calendarPopup.classList.remove('hidden');
         if (!flatpickrInstance) {
@@ -163,14 +151,54 @@ document.addEventListener('DOMContentLoaded', () => {
         calendarPopup.classList.add('hidden');
       }
     });
-
-    // Chiude il popup se si clicca fuori
     document.addEventListener('click', (event) => {
       if (!calendarPopup.contains(event.target) && !calendarIcon.contains(event.target)) {
         calendarPopup.classList.add('hidden');
       }
     });
   }
+
+  // Aggiungo listener globale per mostrare il dettaglio di un dipendente
+  window.showEmployeeDetail = function(employeeName) {
+    // Nascondo le altre sezioni
+    document.getElementById('calendar-section').classList.add('hidden');
+    document.getElementById('employee-section').classList.add('hidden');
+    document.getElementById('hours-section').classList.add('hidden');
+    document.getElementById('export-section').classList.add('hidden');
+    document.getElementById('week-navigation').classList.add('hidden');
+
+    // Mostro la sezione dettaglio
+    const detailSection = document.getElementById('employee-detail');
+    detailSection.classList.remove('hidden');
+    document.getElementById('detail-employee-name').textContent = `Dettaglio: ${employeeName}`;
+    
+    // Imposta di default l'input mese all'ultimo mese
+    const monthInput = document.getElementById('month-selector');
+    const today = new Date();
+    let year = today.getFullYear();
+    let month = today.getMonth(); // 0=gennaio
+    if (month === 0) {
+      month = 12;
+      year--;
+    }
+    monthInput.value = `${year}-${month.toString().padStart(2, '0')}`;
+    updateEmployeeDetail(employeeName, monthInput.value);
+  };
+
+  // Listener per cambio mese nel dettaglio
+  const monthInput = document.getElementById('month-selector');
+  monthInput.addEventListener('change', () => {
+    const employeeName = document.getElementById('detail-employee-name').textContent.replace('Dettaglio: ', '');
+    updateEmployeeDetail(employeeName, monthInput.value);
+  });
+
+  // Listener per il bottone "Indietro"
+  document.getElementById('back-to-shifts').addEventListener('click', () => {
+    document.getElementById('employee-detail').classList.add('hidden');
+    document.getElementById('hours-section').classList.remove('hidden');
+    document.getElementById('week-navigation').classList.remove('hidden');
+    document.getElementById('export-section').classList.remove('hidden');
+  });
 });
 
 function formatDate(date) {
@@ -206,5 +234,32 @@ function cleanOldData() {
   if (modified) {
     localStorage.setItem('schedule', JSON.stringify(schedule));
     location.reload();
+  }
+}
+
+function updateEmployeeDetail(employeeName, monthStr) {
+  // monthStr è in formato "YYYY-MM"
+  const schedule = JSON.parse(localStorage.getItem('schedule')) || {};
+  const shiftHours = { primo: 6, secondo: 6 };
+  let total = 0;
+  let sundayTotal = 0;
+  for (const dateStr in schedule) {
+    if (dateStr.startsWith(monthStr)) {
+      const dateObj = new Date(dateStr);
+      for (const shift in schedule[dateStr]) {
+        const empList = schedule[dateStr][shift];
+        if (empList.includes(employeeName)) {
+          total += shiftHours[shift] || 0;
+          if (dateObj.getDay() === 0) { // domenica
+            sundayTotal += shiftHours[shift] || 0;
+          }
+        }
+      }
+    }
+  }
+  const detailDiv = document.getElementById('detail-hours');
+  detailDiv.innerHTML = `<p>Totale ore lavorate: ${total} ore</p>`;
+  if (sundayTotal > 0) {
+    detailDiv.innerHTML += `<p>Totale ore di domenica: ${sundayTotal} ore</p>`;
   }
 }

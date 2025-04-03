@@ -14,7 +14,6 @@ export function initShiftModule() {
 export function saveShift(date, shiftType, employeeList) {
   if (!schedule[date]) schedule[date] = {};
   schedule[date][shiftType] = employeeList;
-
   localStorage.setItem('schedule', JSON.stringify(schedule));
   updateWorkedHours();
 }
@@ -22,13 +21,10 @@ export function saveShift(date, shiftType, employeeList) {
 function updateWorkedHours() {
   const hoursDiv = document.getElementById('worked-hours');
   if (!hoursDiv) return;
-
   hoursDiv.innerHTML = '';
   const employees = getEmployees();
-
   const totals = {};
   employees.forEach(emp => (totals[emp] = 0));
-
   for (const date in schedule) {
     for (const shift in schedule[date]) {
       const empList = schedule[date][shift];
@@ -39,10 +35,17 @@ function updateWorkedHours() {
       });
     }
   }
-
   for (const emp in totals) {
     const p = document.createElement('p');
     p.textContent = `${emp}: ${totals[emp]} ore lavorate`;
+    p.classList.add('employee-item');
+    p.setAttribute('data-employee', emp);
+    p.style.cursor = 'pointer';
+    p.addEventListener('click', () => {
+      if (typeof showEmployeeDetail === 'function') {
+        showEmployeeDetail(emp);
+      }
+    });
     hoursDiv.appendChild(p);
   }
 }
