@@ -7,12 +7,11 @@
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-
+  
   <!-- Libreria calendario -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
-
 <body>
   <div class="container">
     <h1>Gestione Turni Dipendenti</h1>
@@ -30,25 +29,18 @@
 
     <!-- Sezione di navigazione della settimana -->
     <section id="week-navigation">
-      <!-- Prima riga: freccia sinistra, data corrente + icona calendario, freccia destra -->
-      <div class="nav-row">
-        <div class="nav-left">
-          <button id="prev-week">◀</button>
-        </div>
-        <div class="nav-center">
-          <span id="current-week-label"></span>
-          <button id="calendar-icon" title="Seleziona una settimana">📅</button>
-          <!-- Popup calendario -->
-          <div id="calendar-popup" class="hidden">
-            <input id="calendar-selector" type="text" />
-          </div>
-        </div>
-        <div class="nav-right">
-          <button id="next-week">▶</button>
-        </div>
+      <!-- RIGA 1: Calendario Popup centrato -->
+      <div class="calendar-popup" id="calendar-popup">
+        <input id="calendar-selector" type="text" />
       </div>
-      <!-- Seconda riga: pulsante "Oggi" -->
-      <div class="nav-row">
+      <!-- RIGA 2: Frecce e data corrente, allineate sulla stessa riga -->
+      <div class="date-row">
+        <button id="prev-week">&#9664;</button>
+        <div class="current-date" id="current-week-label">12/04/2025 - 18/04/2025</div>
+        <button id="next-week">&#9654;</button>
+      </div>
+      <!-- RIGA 3: Bottone "Oggi" centrato -->
+      <div class="today-btn">
         <button id="today">Oggi</button>
       </div>
     </section>

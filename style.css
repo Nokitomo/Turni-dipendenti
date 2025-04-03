@@ -108,66 +108,42 @@ button:hover {
 /* Sezione di navigazione della settimana */
 #week-navigation {
   margin: 1rem 0;
-}
-
-/* Righe di navigazione */
-.nav-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.5rem;
-}
-
-/* Suddivisione della prima riga in tre colonne */
-.nav-left, .nav-center, .nav-right {
-  flex: 1;
-}
-
-.nav-left {
-  text-align: left;
-}
-
-.nav-center {
   text-align: center;
 }
 
-.nav-right {
-  text-align: right;
-}
-
-/* Spazio tra la data e il pulsante calendario */
-.nav-center span {
-  margin-right: 0.5rem;
-}
-
-/* Impostazioni per il pulsante calendario */
-#calendar-icon {
-  font-size: 1.2rem;
-  margin-left: 0.5rem;
-}
-
-/* Sezione export */
-#export-section {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.calendar-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-}
-
-.calendar-table th,
-.calendar-table td {
-  border: 1px solid #ccc;
+/* Calendario popup centrato (nella parte superiore) */
+.calendar-popup {
+  margin: 0 auto 0.5rem auto;
+  background: #e3e8ee;
   padding: 0.5rem;
-  text-align: center;
+  width: fit-content;
 }
 
-.shift-select {
-  width: 100%;
-  height: 4rem;
+/* Riga con frecce e data corrente */
+.date-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.date-row button {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.current-date {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+/* Pulsante "Oggi" centrato sotto la data */
+.today-btn {
+  margin-top: 0.5rem;
+}
+
+.today-btn button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
 }
 
 /* Menu in alto a destra */
@@ -221,7 +197,7 @@ button:hover {
   display: none !important;
 }
 
-/* Calendario popup */
+/* Calendario popup per flatpickr */
 #calendar-popup {
   position: absolute;
   top: 6rem;
@@ -247,17 +223,18 @@ button:hover {
 
 /* Media query per schermi piccoli */
 @media (max-width: 480px) {
-  .nav-row {
+  .date-row {
     flex-direction: column;
   }
   
-  .nav-left, .nav-center, .nav-right {
-    flex: 1 1 100%;
+  .date-row button,
+  .current-date {
+    width: 100%;
     text-align: center;
+    font-size: 0.9rem;
   }
   
-  .nav-row button,
-  .nav-row span {
+  .today-btn button {
     width: 100%;
     text-align: center;
     font-size: 0.9rem;
