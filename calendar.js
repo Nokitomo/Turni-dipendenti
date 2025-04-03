@@ -45,17 +45,32 @@ function renderCalendar(startDate) {
       select.dataset.shift = turno;
       select.classList.add('shift-select');
 
+      // Aggiungi l'opzione "Chiuso"
+      const chiusoOption = document.createElement('option');
+      chiusoOption.value = "chiuso";
+      chiusoOption.textContent = "Chiuso";
+      select.appendChild(chiusoOption);
+
+      // Aggiungi le opzioni per gli impiegati
       employees.forEach(emp => {
         const option = document.createElement('option');
         option.value = emp;
         option.textContent = emp;
-        cell.appendChild(select);
         select.appendChild(option);
       });
 
+      // Se "Chiuso" è selezionato, deseleziona le altre opzioni
       select.addEventListener('change', () => {
         const selected = Array.from(select.selectedOptions).map(opt => opt.value);
-        saveShift(dateObj.key, turno, selected);
+        if (selected.includes("chiuso") && selected.length > 1) {
+          for (const option of select.options) {
+            if (option.value !== "chiuso") {
+              option.selected = false;
+            }
+          }
+        }
+        const finalSelected = Array.from(select.selectedOptions).map(opt => opt.value);
+        saveShift(dateObj.key, turno, finalSelected);
       });
 
       cell.appendChild(select);

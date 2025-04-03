@@ -27,6 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
     renderWeekLabel();
   });
 
+  // Bottone "Oggi" per tornare alla settimana corrente
+  document.getElementById('today').addEventListener('click', () => {
+    currentWeekStart = getMonday(new Date());
+    renderWeekLabel();
+  });
+
   document.getElementById('export-pdf').addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
