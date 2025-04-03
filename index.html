@@ -30,14 +30,18 @@
 
     <!-- Sezione di navigazione della settimana -->
     <section id="week-navigation">
-      <button id="prev-week">◀</button>
-      <button id="today">Oggi</button>
-      <span id="current-week-label"></span>
-      <button id="calendar-icon" title="Seleziona una settimana" style="font-size: 1.2rem; margin-left: 10px;">📅</button>
-      <div id="calendar-popup" class="hidden">
-        <input id="calendar-selector" type="text" />
+      <div id="week-controls">
+        <button id="prev-week">◀</button>
+        <span id="current-week-label"></span>
+        <button id="next-week">▶</button>
       </div>
-      <button id="next-week">▶</button>
+      <div id="week-extra">
+        <button id="today">Oggi</button>
+        <button id="calendar-icon" title="Seleziona una settimana" style="font-size: 1.2rem;">📅</button>
+        <div id="calendar-popup" class="hidden">
+          <input id="calendar-selector" type="text" />
+        </div>
+      </div>
     </section>
 
     <section id="calendar-section">

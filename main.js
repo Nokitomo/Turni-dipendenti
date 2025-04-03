@@ -10,6 +10,7 @@ function getMonday(d) {
 }
 
 let currentWeekStart = getMonday(new Date());
+let flatpickrInstance = null; // Dichiarato in ambito globale per poterlo aggiornare anche nel bottone "Oggi"
 
 document.addEventListener('DOMContentLoaded', () => {
   initEmployeeModule();
@@ -27,10 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
     renderWeekLabel();
   });
 
-  // Bottone "Oggi" per tornare alla settimana corrente
+  // Bottone "Oggi": torna alla settimana corrente e aggiorna la data nel calendario popup
   document.getElementById('today').addEventListener('click', () => {
     currentWeekStart = getMonday(new Date());
     renderWeekLabel();
+    if (flatpickrInstance) {
+      flatpickrInstance.setDate(new Date(), false);
+    }
   });
 
   document.getElementById('export-pdf').addEventListener('click', () => {
@@ -86,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     doc.output('dataurlnewwindow');
   });
 
+  // Gestione del menu
   const menuBtn = document.getElementById('menu-button');
   const dropdown = document.getElementById('menu-dropdown');
 
@@ -96,18 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
   dropdown.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => {
       const targetId = btn.dataset.target;
-
-      [
-        'employee-section',
-        'hours-section',
-        'cleanup-section',
-        'calendar-section',
-        'week-navigation',
-        'export-section'
-      ].forEach(id => {
+      ['employee-section', 'hours-section', 'cleanup-section', 'calendar-section', 'week-navigation', 'export-section'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
       });
-
       if (targetId === 'calendar-section') {
         ['calendar-section', 'week-navigation', 'export-section'].forEach(id => {
           document.getElementById(id).classList.remove('hidden');
@@ -115,39 +111,34 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         document.getElementById(targetId).classList.remove('hidden');
       }
-
       dropdown.classList.add('hidden');
     });
   });
 
+  // Pulizia automatica dei dati
   const cleanupSelect = document.getElementById('cleanup-select');
   if (cleanupSelect) {
     const savedPolicy = localStorage.getItem('cleanup-policy');
     if (savedPolicy) {
       cleanupSelect.value = savedPolicy;
     }
-
     cleanupSelect.addEventListener('change', () => {
       const value = cleanupSelect.value;
       localStorage.setItem('cleanup-policy', value);
       cleanOldData();
     });
-
     cleanOldData();
   }
 
-  // === Calendario popup (inizializzazione stabile al primo click) ===
+  // Gestione del calendario popup
   const calendarIcon = document.getElementById('calendar-icon');
   const calendarPopup = document.getElementById('calendar-popup');
   const calendarInput = document.getElementById('calendar-selector');
-
-  let flatpickrInstance = null;
 
   if (calendarIcon && calendarPopup && calendarInput) {
     calendarIcon.addEventListener('click', () => {
       if (calendarPopup.classList.contains('hidden')) {
         calendarPopup.classList.remove('hidden');
-
         if (!flatpickrInstance) {
           flatpickrInstance = flatpickr(calendarInput, {
             inline: true,
@@ -169,11 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    // Chiude il popup se si clicca fuori
     document.addEventListener('click', (event) => {
-      if (
-        !calendarPopup.contains(event.target) &&
-        !calendarIcon.contains(event.target)
-      ) {
+      if (!calendarPopup.contains(event.target) && !calendarIcon.contains(event.target)) {
         calendarPopup.classList.add('hidden');
       }
     });
@@ -193,28 +182,23 @@ function renderWeekLabel() {
   endDate.setDate(currentWeekStart.getDate() + 6);
   document.getElementById('current-week-label').textContent =
     formatDate(currentWeekStart) + ' - ' + formatDate(endDate);
-
   updateCalendarForWeek(currentWeekStart);
 }
 
 function cleanOldData() {
   const months = parseInt(localStorage.getItem('cleanup-policy'));
   if (isNaN(months)) return;
-
   const cutoff = new Date();
   cutoff.setMonth(cutoff.getMonth() - months);
   const cutoffKey = cutoff.toISOString().split('T')[0];
-
   let schedule = JSON.parse(localStorage.getItem('schedule')) || {};
   let modified = false;
-
   for (const date in schedule) {
     if (date < cutoffKey) {
       delete schedule[date];
       modified = true;
     }
   }
-
   if (modified) {
     localStorage.setItem('schedule', JSON.stringify(schedule));
     location.reload();

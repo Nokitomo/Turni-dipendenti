@@ -108,16 +108,29 @@ button:hover {
 /* Sezione di navigazione della settimana */
 #week-navigation {
   display: flex;
-  flex-wrap: wrap; /* Permette agli elementi di andare a capo se necessario */
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
   margin: 1rem 0;
 }
 
-#week-navigation button {
-  white-space: nowrap; /* Evita che il testo vada a capo internamente */
-  flex: 0 1 auto;
+/* Nuovi contenitori per la navigazione settimanale */
+#week-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+#week-extra {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+#week-controls button,
+#week-extra button {
+  flex-shrink: 0;
 }
 
 #current-week-label {
@@ -221,17 +234,19 @@ button:hover {
 
 /* Media Query per schermi piccoli */
 @media (max-width: 480px) {
-  #week-navigation {
+  #week-controls {
     flex-direction: column;
   }
   
-  #week-navigation button,
-  #current-week-label {
+  #week-controls button,
+  #current-week-label,
+  #week-extra button {
     width: 100%;
     text-align: center;
   }
   
-  #week-navigation button {
+  #week-controls button,
+  #week-extra button {
     font-size: 0.9rem;
   }
 }
