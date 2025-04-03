@@ -1,0 +1,22 @@
+#calendar {
+  margin-top: 1rem;
+}
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+.calendar-table th,
+.calendar-table td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: center;
+}
+.calendar-table th {
+  background-color: #3498db;
+  color: #fff;
+  font-weight: 500;
+}
+.calendar-table td {
+  background-color: #fff;
+}

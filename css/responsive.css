@@ -1,0 +1,16 @@
+@media (max-width: 480px) {
+  .date-row {
+    flex-direction: column;
+  }
+  .date-row button,
+  .current-date {
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+  .today-btn button {
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+}
