@@ -218,8 +218,8 @@ button:hover {
   min-height: 300px;
 }
 
-/* Input nascosto ma visibile per flatpickr */
-#calendar-popup input {
+/* Nascondi solo l’input originale, non quelli generati da flatpickr */
+#calendar-selector {
   opacity: 0;
   height: 0;
   pointer-events: none;
