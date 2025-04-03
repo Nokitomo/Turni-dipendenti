@@ -107,42 +107,46 @@ button:hover {
 
 /* Sezione di navigazione della settimana */
 #week-navigation {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   margin: 1rem 0;
 }
 
-/* Nuovi contenitori per la navigazione settimanale */
-#week-controls {
+/* Righe di navigazione */
+.nav-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 0.5rem;
 }
 
-#week-extra {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+/* Suddivisione della prima riga in tre colonne */
+.nav-left, .nav-center, .nav-right {
+  flex: 1;
 }
 
-#week-controls button,
-#week-extra button {
-  flex-shrink: 0;
+.nav-left {
+  text-align: left;
 }
 
-#current-week-label {
-  font-weight: bold;
-  font-size: 1rem;
+.nav-center {
+  text-align: center;
 }
 
+.nav-right {
+  text-align: right;
+}
+
+/* Spazio tra la data e il pulsante calendario */
+.nav-center span {
+  margin-right: 0.5rem;
+}
+
+/* Impostazioni per il pulsante calendario */
 #calendar-icon {
-  margin-left: 10px;
   font-size: 1.2rem;
+  margin-left: 0.5rem;
 }
 
+/* Sezione export */
 #export-section {
   text-align: center;
   margin-top: 2rem;
@@ -166,7 +170,7 @@ button:hover {
   height: 4rem;
 }
 
-/* --- MENU IN ALTO A DESTRA --- */
+/* Menu in alto a destra */
 #main-menu {
   position: absolute;
   top: 1rem;
@@ -217,41 +221,7 @@ button:hover {
   display: none !important;
 }
 
-@media (max-width: 768px) {
-  .calendar-row {
-    flex-direction: column;
-  }
-
-  #employee-list li {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  #calendar {
-    overflow-x: auto;
-  }
-}
-
-/* Media Query per schermi piccoli */
-@media (max-width: 480px) {
-  #week-controls {
-    flex-direction: column;
-  }
-  
-  #week-controls button,
-  #current-week-label,
-  #week-extra button {
-    width: 100%;
-    text-align: center;
-  }
-  
-  #week-controls button,
-  #week-extra button {
-    font-size: 0.9rem;
-  }
-}
-
-/* === CALENDAR POPUP === */
+/* Calendario popup */
 #calendar-popup {
   position: absolute;
   top: 6rem;
@@ -267,10 +237,29 @@ button:hover {
   min-height: 300px;
 }
 
-/* Nascondi solo l’input originale, non quelli generati da flatpickr */
+/* Nascondi l'input originale per flatpickr */
 #calendar-selector {
   opacity: 0;
   height: 0;
   pointer-events: none;
   position: absolute;
+}
+
+/* Media query per schermi piccoli */
+@media (max-width: 480px) {
+  .nav-row {
+    flex-direction: column;
+  }
+  
+  .nav-left, .nav-center, .nav-right {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+  
+  .nav-row button,
+  .nav-row span {
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+  }
 }

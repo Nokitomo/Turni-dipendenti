@@ -10,7 +10,7 @@ function getMonday(d) {
 }
 
 let currentWeekStart = getMonday(new Date());
-let flatpickrInstance = null; // Dichiarato in ambito globale per poterlo aggiornare anche nel bottone "Oggi"
+let flatpickrInstance = null; // Rende l'istanza accessibile globalmente
 
 document.addEventListener('DOMContentLoaded', () => {
   initEmployeeModule();
@@ -18,17 +18,19 @@ document.addEventListener('DOMContentLoaded', () => {
   initShiftModule();
   renderWeekLabel();
 
+  // Navigazione settimanale: freccia sinistra
   document.getElementById('prev-week').addEventListener('click', () => {
     currentWeekStart.setDate(currentWeekStart.getDate() - 7);
     renderWeekLabel();
   });
 
+  // Navigazione settimanale: freccia destra
   document.getElementById('next-week').addEventListener('click', () => {
     currentWeekStart.setDate(currentWeekStart.getDate() + 7);
     renderWeekLabel();
   });
 
-  // Bottone "Oggi": torna alla settimana corrente e aggiorna la data nel calendario popup
+  // Bottone "Oggi": torna alla settimana corrente e aggiorna il calendario popup
   document.getElementById('today').addEventListener('click', () => {
     currentWeekStart = getMonday(new Date());
     renderWeekLabel();
@@ -37,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Esportazione PDF
   document.getElementById('export-pdf').addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -90,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     doc.output('dataurlnewwindow');
   });
 
-  // Gestione del menu
+  // Gestione del menu in alto a destra
   const menuBtn = document.getElementById('menu-button');
   const dropdown = document.getElementById('menu-dropdown');
 
