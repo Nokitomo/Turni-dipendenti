@@ -18,19 +18,19 @@ document.addEventListener('DOMContentLoaded', () => {
   initShiftModule();
   renderWeekLabel();
 
-  // Navigazione settimanale: freccia sinistra
+  // Navigazione settimanale: bottone "◀" (settimana precedente)
   document.getElementById('prev-week').addEventListener('click', () => {
     currentWeekStart.setDate(currentWeekStart.getDate() - 7);
     renderWeekLabel();
   });
 
-  // Navigazione settimanale: freccia destra
+  // Navigazione settimanale: bottone "▶" (settimana successiva)
   document.getElementById('next-week').addEventListener('click', () => {
     currentWeekStart.setDate(currentWeekStart.getDate() + 7);
     renderWeekLabel();
   });
 
-  // Bottone "Oggi": torna alla settimana corrente e aggiorna il calendario popup
+  // Bottone "Oggi": torna alla settimana corrente e aggiorna la data nel popup del calendario
   document.getElementById('today').addEventListener('click', () => {
     currentWeekStart = getMonday(new Date());
     renderWeekLabel();
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cleanOldData();
   }
 
-  // Gestione del calendario popup
+  // Gestione del popup del calendario
   const calendarIcon = document.getElementById('calendar-icon');
   const calendarPopup = document.getElementById('calendar-popup');
   const calendarInput = document.getElementById('calendar-selector');
