@@ -111,6 +111,16 @@ button:hover {
   text-align: center;
 }
 
+/* Bottone calendario (icona) centrato sopra la data */
+.calendar-icon-container {
+  margin-bottom: 0.5rem;
+}
+
+.calendar-icon-container button {
+  padding: 0.5rem;
+  font-size: 1.2rem;
+}
+
 /* Calendario popup centrato (nella parte superiore) */
 .calendar-popup {
   margin: 0 auto 0.5rem auto;

@@ -139,7 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const calendarInput = document.getElementById('calendar-selector');
 
   if (calendarIcon && calendarPopup && calendarInput) {
-    calendarIcon.addEventListener('click', () => {
+    calendarIcon.addEventListener('click', (e) => {
+      e.stopPropagation(); // Impedisci la propagazione del click per non chiudere subito il popup
       if (calendarPopup.classList.contains('hidden')) {
         calendarPopup.classList.remove('hidden');
         if (!flatpickrInstance) {

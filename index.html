@@ -29,17 +29,21 @@
 
     <!-- Sezione di navigazione della settimana -->
     <section id="week-navigation">
-      <!-- RIGA 1: Calendario Popup centrato -->
-      <div class="calendar-popup" id="calendar-popup">
+      <!-- RIGA 1: Bottone calendario per aprire/chiudere il popup (centrato sopra la data) -->
+      <div class="calendar-icon-container">
+        <button id="calendar-icon">📅</button>
+      </div>
+      <!-- RIGA 2: Calendario Popup (inizialmente nascosto) -->
+      <div class="calendar-popup hidden" id="calendar-popup">
         <input id="calendar-selector" type="text" />
       </div>
-      <!-- RIGA 2: Frecce e data corrente, allineate sulla stessa riga -->
+      <!-- RIGA 3: Frecce e data corrente, allineate sulla stessa riga -->
       <div class="date-row">
         <button id="prev-week">&#9664;</button>
         <div class="current-date" id="current-week-label">12/04/2025 - 18/04/2025</div>
         <button id="next-week">&#9654;</button>
       </div>
-      <!-- RIGA 3: Bottone "Oggi" centrato -->
+      <!-- RIGA 4: Bottone "Oggi" centrato -->
       <div class="today-btn">
         <button id="today">Oggi</button>
       </div>
