@@ -24,3 +24,6 @@
 
 /* Importa il CSS per i form */
 @import url('./css/forms.css');
+
+/* importa il css per la pagina dettaglio dipendenti
+@import url('./css/employee-details.css');

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dettaglio Dipendente</title>
+  <link rel="stylesheet" href="css/employee-details.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Dettaglio Turni di <span id="employee-name-display"></span></h1>
+    </header>
+    
+    <!-- Selettore mese -->
+    <section class="month-selector">
+      <label for="month-select">Seleziona mese:</label>
+      <select id="month-select"></select>
+    </section>
+    
+    <!-- Riepilogo ore -->
+    <section class="hours-summary">
+      <p id="total-hours">Totale ore lavorate: --</p>
+      <p id="sunday-hours">Totale ore di domenica: --</p>
+    </section>
+    
+    <!-- Pulsante Indietro -->
+    <section class="back-btn">
+      <button id="back-btn">Indietro</button>
+    </section>
+  </div>
+  
+  <script type="module" src="employee-details.js"></script>
+</body>
+</html>
