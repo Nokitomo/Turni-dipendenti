@@ -1,0 +1,26 @@
+/* Importa il CSS base */
+@import url('./css/base.css');
+
+/* Importa il CSS per la navigazione */
+@import url('./css/navigation.css');
+
+/* Importa il CSS per il calendario */
+@import url('./css/calendar.css');
+
+/* Importa il CSS per le ore lavorate */
+@import url('./css/hours.css');
+
+/* Importa il CSS per il popup del calendario */
+@import url('./css/popup.css');
+
+/* Importa il CSS per i dipendenti */
+@import url('./css/employee.css');
+
+/* Importa il CSS per il menu */
+@import url('./css/menu.css');
+
+/* Importa il CSS responsive */
+@import url('./css/responsive.css');
+
+/* Importa il CSS per i form */
+@import url('./css/forms.css');
