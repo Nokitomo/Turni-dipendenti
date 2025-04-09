@@ -5,7 +5,7 @@ const params = new URLSearchParams(window.location.search);
 const employeeName = params.get('employee') || 'Dipendente sconosciuto';
 document.getElementById('employee-name-display').textContent = employeeName;
 
-// Recupera la provenienza dalla sessionStorage
+// Recupera la provenienza dalla sessionStorage (deve essere impostata nella pagina "Ore Dipendenti")
 const previousPage = sessionStorage.getItem('previousPage') || '';
 
 // Se l'utente non proviene da "ore-dipendenti", nascondi il pulsante "Indietro"
@@ -13,24 +13,11 @@ if (previousPage !== 'ore-dipendenti') {
   document.getElementById('back-btn').style.display = 'none';
 }
 
-// Popola il selettore dei mesi (usando ad es. gli ultimi 12 mesi)
-const monthSelect = document.getElementById('month-select');
+// Imposta il campo mese (input type="month") al mese corrente
+const monthInput = document.getElementById('month-selector');
 const now = new Date();
-// Definisce l'ultimo mese completo: se siamo a metà mese, considera il mese precedente
-const lastCompleteMonth = (now.getDate() < 15)
-  ? new Date(now.getFullYear(), now.getMonth() - 1, 1)
-  : new Date(now.getFullYear(), now.getMonth(), 1);
-for (let i = 0; i < 12; i++) {
-  let d = new Date(lastCompleteMonth.getFullYear(), lastCompleteMonth.getMonth() - i, 1);
-  // Formatta il mese (es. "Febbraio 2023")
-  let optionText = d.toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
-  let option = document.createElement('option');
-  option.value = d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0');
-  option.textContent = optionText;
-  monthSelect.appendChild(option);
-}
-// Imposta il mese predefinito come il primo dell'elenco
-monthSelect.value = lastCompleteMonth.getFullYear() + '-' + (lastCompleteMonth.getMonth() + 1).toString().padStart(2, '0');
+const defaultMonth = now.getFullYear() + '-' + ( (now.getMonth() + 1).toString().padStart(2, '0') );
+monthInput.value = defaultMonth;
 
 // Funzione per calcolare le ore lavorate per un dipendente in un mese
 function calculateHoursForEmployee(employee, monthStr) {
@@ -38,17 +25,18 @@ function calculateHoursForEmployee(employee, monthStr) {
   const schedule = JSON.parse(localStorage.getItem('schedule')) || {};
   let totalHours = 0;
   let sundayHours = 0;
-  // Supponiamo che le ore di ciascun turno siano fisse, come nel file shifts.js:
+  // Definiamo le ore per ogni turno, come in shifts.js
   const shiftHours = { primo: 6, secondo: 6 };
 
-  // Estrai anno e mese
+  // Estrai anno e mese dal formato "YYYY-MM"
   const [year, month] = monthStr.split('-').map(Number);
 
-  // Per ogni data nel schedule
+  // Per ogni data presente nello schedule
   for (const dateStr in schedule) {
     const date = new Date(dateStr);
+    // Controlla se la data corrisponde all'anno e mese selezionato
     if (date.getFullYear() === year && (date.getMonth() + 1) === month) {
-      // Per ogni turno in quella data
+      // Per ogni turno di quella data
       for (const turno in schedule[dateStr]) {
         const empList = schedule[dateStr][turno];
         if (empList.includes(employee)) {
@@ -66,22 +54,23 @@ function calculateHoursForEmployee(employee, monthStr) {
 
 // Funzione per aggiornare il riepilogo ore in base al mese selezionato
 function updateHours() {
-  const monthStr = monthSelect.value;
+  const monthStr = monthInput.value;
   const { totalHours, sundayHours } = calculateHoursForEmployee(employeeName, monthStr);
   document.getElementById('total-hours').textContent = `Totale ore lavorate: ${totalHours} ore`;
   document.getElementById('sunday-hours').textContent = `Totale ore di domenica: ${sundayHours} ore`;
 }
 
-// Aggiorna il riepilogo quando si cambia il mese
-monthSelect.addEventListener('change', updateHours);
+// Aggiungi un listener per aggiornare il riepilogo ogni volta che l'utente cambia il mese
+monthInput.addEventListener('change', updateHours);
 
-// Aggiorna subito il riepilogo
+// Aggiorna subito il riepilogo al caricamento della pagina
 updateHours();
 
-// Pulsante "Indietro": se l'utente proviene da "ore-dipendenti", torna a quella pagina; altrimenti usa history.back()
+// Gestione del pulsante "Indietro":
+// Se l'utente proviene da "ore-dipendenti", torna alla sezione "Ore Dipendenti" (ad es., index.html#hours-section)
+// Altrimenti utilizza history.back()
 document.getElementById('back-btn').addEventListener('click', () => {
   if (previousPage === 'ore-dipendenti') {
-    // Torna alla sezione "Ore Dipendenti" della pagina principale
     window.location.href = 'index.html#hours-section';
   } else {
     window.history.back();
