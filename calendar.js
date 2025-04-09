@@ -29,6 +29,9 @@ function renderCalendar(startDate) {
   headerRow.innerHTML = `<th>Giorno</th><th>Primo Turno</th><th>Secondo Turno</th>`;
   table.appendChild(headerRow);
 
+  // Recupera lo schedule salvato in localStorage
+  const savedSchedule = JSON.parse(localStorage.getItem('schedule')) || {};
+
   dates.forEach((dateObj, index) => {
     const row = document.createElement('tr');
 
@@ -59,7 +62,17 @@ function renderCalendar(startDate) {
         select.appendChild(option);
       });
 
-      // Se "Chiuso" è selezionato, deseleziona le altre opzioni
+      // Se esistono dati salvati per questa data e turno, imposta le opzioni selezionate
+      const savedValues = savedSchedule[dateObj.key] ? savedSchedule[dateObj.key][turno] : null;
+      if (savedValues) {
+        for (let i = 0; i < select.options.length; i++) {
+          if (savedValues.includes(select.options[i].value)) {
+            select.options[i].selected = true;
+          }
+        }
+      }
+
+      // Gestisce il cambio selezione: se "Chiuso" è selezionato, deseleziona le altre opzioni
       select.addEventListener('change', () => {
         const selected = Array.from(select.selectedOptions).map(opt => opt.value);
         if (selected.includes("chiuso") && selected.length > 1) {
