@@ -72,7 +72,7 @@ function renderCalendar(startDate) {
         }
       }
 
-      // Gestisce il cambio selezione: se "Chiuso" è selezionato, deseleziona le altre opzioni
+      // Gestione del cambio selezione: se "Chiuso" è selezionato, deseleziona le altre opzioni
       select.addEventListener('change', () => {
         const selected = Array.from(select.selectedOptions).map(opt => opt.value);
         if (selected.includes("chiuso") && selected.length > 1) {
@@ -96,12 +96,14 @@ function renderCalendar(startDate) {
   calendarEl.appendChild(table);
 }
 
+// Aggiornata per formattare la data in locale (senza usare toISOString())
 function getWeekDates(startDate) {
   const dates = [];
   for (let i = 0; i < 7; i++) {
     const d = new Date(startDate);
     d.setDate(startDate.getDate() + i);
-    const key = d.toISOString().split('T')[0];
+    // Formattazione della chiave usando metodi locali
+    const key = d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0') + '-' + d.getDate().toString().padStart(2, '0');
     const dateString = d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' });
     dates.push({ key, dateString });
   }
