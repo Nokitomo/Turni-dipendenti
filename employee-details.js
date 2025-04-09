@@ -1,9 +1,11 @@
+// employee-details.js
+
 // Recupera il nome del dipendente dalla query string, ad es. ?employee=Marco
 const params = new URLSearchParams(window.location.search);
 const employeeName = params.get('employee') || 'Dipendente sconosciuto';
 document.getElementById('employee-name-display').textContent = employeeName;
 
-// Recupera la provenienza dalla sessionStorage (dovrà essere impostata nella pagina "Ore Dipendenti")
+// Recupera la provenienza dalla sessionStorage
 const previousPage = sessionStorage.getItem('previousPage') || '';
 
 // Se l'utente non proviene da "ore-dipendenti", nascondi il pulsante "Indietro"
@@ -79,7 +81,8 @@ updateHours();
 // Pulsante "Indietro": se l'utente proviene da "ore-dipendenti", torna a quella pagina; altrimenti usa history.back()
 document.getElementById('back-btn').addEventListener('click', () => {
   if (previousPage === 'ore-dipendenti') {
-    window.location.href = 'ore-dipendenti.html';
+    // Torna alla sezione "Ore Dipendenti" della pagina principale
+    window.location.href = 'index.html#hours-section';
   } else {
     window.history.back();
   }
