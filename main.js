@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!flatpickrInstance) {
           flatpickrInstance = flatpickr(calendarInput, {
             inline: true,
-            locale: 'it',
+            locale: Object.assign({}, flatpickr.l10ns.it, { firstDayOfWeek: 1 }),
             weekNumbers: true,
             defaultDate: new Date(),
             onChange: function (selectedDates) {
