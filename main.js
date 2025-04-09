@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Esportazione PDF (già implementata)
+  // Esportazione PDF
   document.getElementById('export-pdf').addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -158,14 +158,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Aggiungo listener globale per mostrare il dettaglio di un dipendente
+  // Funzione globale per mostrare il dettaglio di un dipendente
   window.showEmployeeDetail = function(employeeName) {
-    // Nascondo le altre sezioni
+    // Nascondo le sezioni non rilevanti
     document.getElementById('calendar-section').classList.add('hidden');
     document.getElementById('employee-section').classList.add('hidden');
-    document.getElementById('hours-section').classList.add('hidden');
-    document.getElementById('export-section').classList.add('hidden');
+    // mostro solo la sezione delle ore lavorate che rappresenta "Ore Dipendenti"
+    document.getElementById('hours-section').classList.remove('hidden');
+    // Nascondo la navigazione e l'export, se presenti
     document.getElementById('week-navigation').classList.add('hidden');
+    document.getElementById('export-section').classList.add('hidden');
 
     // Mostro la sezione dettaglio
     const detailSection = document.getElementById('employee-detail');
@@ -176,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const monthInput = document.getElementById('month-selector');
     const today = new Date();
     let year = today.getFullYear();
-    let month = today.getMonth(); // 0=gennaio
+    let month = today.getMonth();
     if (month === 0) {
       month = 12;
       year--;
@@ -192,12 +194,17 @@ document.addEventListener('DOMContentLoaded', () => {
     updateEmployeeDetail(employeeName, monthInput.value);
   });
 
-  // Listener per il bottone "Indietro"
+  // Listener per il pulsante "Indietro" nella pagina del dettaglio
   document.getElementById('back-to-shifts').addEventListener('click', () => {
+    // Nascondi la sezione dettaglio
     document.getElementById('employee-detail').classList.add('hidden');
+    // Assicurati di mostrare solo la sezione Ore Dipendenti
+    document.getElementById('calendar-section').classList.add('hidden');
+    document.getElementById('employee-section').classList.add('hidden');
+    document.getElementById('cleanup-section').classList.add('hidden');
+    document.getElementById('export-section').classList.add('hidden');
+    document.getElementById('week-navigation').classList.add('hidden');
     document.getElementById('hours-section').classList.remove('hidden');
-    document.getElementById('week-navigation').classList.remove('hidden');
-    document.getElementById('export-section').classList.remove('hidden');
   });
 });
 
@@ -250,7 +257,7 @@ function updateEmployeeDetail(employeeName, monthStr) {
         const empList = schedule[dateStr][shift];
         if (empList.includes(employeeName)) {
           total += shiftHours[shift] || 0;
-          if (dateObj.getDay() === 0) { // domenica
+          if (dateObj.getDay() === 0) {
             sundayTotal += shiftHours[shift] || 0;
           }
         }

@@ -42,6 +42,8 @@ function updateWorkedHours() {
     p.setAttribute('data-employee', emp);
     p.style.cursor = 'pointer';
     p.addEventListener('click', () => {
+      // Salva la provenienza: l'utente proviene dalla pagina "Ore Dipendenti"
+      sessionStorage.setItem('previousPage', 'ore-dipendenti');
       if (typeof showEmployeeDetail === 'function') {
         showEmployeeDetail(emp);
       }
