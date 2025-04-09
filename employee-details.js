@@ -13,11 +13,21 @@ if (previousPage !== 'ore-dipendenti') {
   document.getElementById('back-btn').style.display = 'none';
 }
 
-// Imposta il campo mese (input type="month") al mese corrente
-const monthInput = document.getElementById('month-selector');
+// Imposta il campo mese (selettore con id "month-select") al mese corrente
+const monthInput = document.getElementById('month-select');
 const now = new Date();
-const defaultMonth = now.getFullYear() + '-' + ( (now.getMonth() + 1).toString().padStart(2, '0') );
+const defaultMonth = now.getFullYear() + '-' + ((now.getMonth() + 1).toString().padStart(2, '0'));
 monthInput.value = defaultMonth;
+
+// Popola il selettore dei mesi con gli ultimi 12 mesi
+for (let i = 0; i < 12; i++) {
+  let d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+  let optionText = d.toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
+  let option = document.createElement('option');
+  option.value = d.getFullYear() + '-' + ((d.getMonth() + 1).toString().padStart(2, '0'));
+  option.textContent = optionText;
+  monthInput.appendChild(option);
+}
 
 // Funzione per calcolare le ore lavorate per un dipendente in un mese
 function calculateHoursForEmployee(employee, monthStr) {
@@ -34,7 +44,7 @@ function calculateHoursForEmployee(employee, monthStr) {
   // Per ogni data presente nello schedule
   for (const dateStr in schedule) {
     const date = new Date(dateStr);
-    // Controlla se la data corrisponde all'anno e mese selezionato
+    // Controlla se la data corrisponde all'anno e al mese selezionato
     if (date.getFullYear() === year && (date.getMonth() + 1) === month) {
       // Per ogni turno di quella data
       for (const turno in schedule[dateStr]) {
@@ -67,8 +77,8 @@ monthInput.addEventListener('change', updateHours);
 updateHours();
 
 // Gestione del pulsante "Indietro":
-// Se l'utente proviene da "ore-dipendenti", torna alla sezione "Ore Dipendenti" (ad es., index.html#hours-section)
-// Altrimenti utilizza history.back()
+// Se l'utente proviene da "ore-dipendenti", torna alla sezione "Ore Dipendenti" (es. index.html#hours-section)
+// Altrimenti, usa history.back()
 document.getElementById('back-btn').addEventListener('click', () => {
   if (previousPage === 'ore-dipendenti') {
     window.location.href = 'index.html#hours-section';
