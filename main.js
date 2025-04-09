@@ -90,18 +90,31 @@ document.addEventListener('DOMContentLoaded', () => {
   menuBtn.addEventListener('click', () => {
     dropdown.classList.toggle('hidden');
   });
+  // Qui nascondiamo tutte le sezioni, incluso il dettaglio, prima di mostrare quella selezionata
   dropdown.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => {
       const targetId = btn.dataset.target;
-      ['employee-section', 'hours-section', 'cleanup-section', 'calendar-section', 'week-navigation', 'export-section'].forEach(id => {
-        document.getElementById(id).classList.add('hidden');
+      const sectionsToHide = [
+        'employee-section',
+        'hours-section',
+        'cleanup-section',
+        'calendar-section',
+        'week-navigation',
+        'export-section',
+        'employee-detail' // Aggiunto per nascondere la sezione dettaglio
+      ];
+      sectionsToHide.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
       });
       if (targetId === 'calendar-section') {
         ['calendar-section', 'week-navigation', 'export-section'].forEach(id => {
-          document.getElementById(id).classList.remove('hidden');
+          const el = document.getElementById(id);
+          if (el) el.classList.remove('hidden');
         });
       } else {
-        document.getElementById(targetId).classList.remove('hidden');
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) targetEl.classList.remove('hidden');
       }
       dropdown.classList.add('hidden');
     });
@@ -160,25 +173,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Funzione globale per mostrare il dettaglio di un dipendente
   window.showEmployeeDetail = function(employeeName) {
-    // Nascondo le sezioni non rilevanti
+    // Quando mostriamo il dettaglio, l'utente proviene dalla pagina "Ore Dipendenti",
+    // quindi il pulsante "Indietro" nella pagina dettaglio verrà visualizzato (gestito in employee-details.js)
     document.getElementById('calendar-section').classList.add('hidden');
     document.getElementById('employee-section').classList.add('hidden');
-    // mostro solo la sezione delle ore lavorate che rappresenta "Ore Dipendenti"
-    document.getElementById('hours-section').classList.remove('hidden');
-    // Nascondo la navigazione e l'export, se presenti
+    // Nascondiamo anche la navigazione e l'export della pagina principale
     document.getElementById('week-navigation').classList.add('hidden');
     document.getElementById('export-section').classList.add('hidden');
+    document.getElementById('hours-section').classList.remove('hidden');
 
     // Mostro la sezione dettaglio
     const detailSection = document.getElementById('employee-detail');
     detailSection.classList.remove('hidden');
     document.getElementById('detail-employee-name').textContent = `Dettaglio: ${employeeName}`;
-    
+
     // Imposta di default l'input mese all'ultimo mese
     const monthInput = document.getElementById('month-selector');
     const today = new Date();
     let year = today.getFullYear();
-    let month = today.getMonth();
+    let month = today.getMonth(); // 0=gennaio
     if (month === 0) {
       month = 12;
       year--;
@@ -198,7 +211,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('back-to-shifts').addEventListener('click', () => {
     // Nascondi la sezione dettaglio
     document.getElementById('employee-detail').classList.add('hidden');
-    // Assicurati di mostrare solo la sezione Ore Dipendenti
+    // Mostra solo la sezione "Ore Dipendenti"
+    // Nascondiamo le altre sezioni della pagina principale
     document.getElementById('calendar-section').classList.add('hidden');
     document.getElementById('employee-section').classList.add('hidden');
     document.getElementById('cleanup-section').classList.add('hidden');
