@@ -13,21 +13,27 @@ if (previousPage !== 'ore-dipendenti') {
   document.getElementById('back-btn').style.display = 'none';
 }
 
-// Imposta il campo mese (selettore con id "month-select") al mese corrente
-const monthInput = document.getElementById('month-select');
+// Popola il selettore dei mesi (usando ad es. gli ultimi 12 mesi)
+// Utilizza l'id "month-select" (assicurati che in employee-details.html questo sia l'id corretto)
+const monthSelect = document.getElementById('month-select');
 const now = new Date();
-const defaultMonth = now.getFullYear() + '-' + ((now.getMonth() + 1).toString().padStart(2, '0'));
-monthInput.value = defaultMonth;
 
-// Popola il selettore dei mesi con gli ultimi 12 mesi
+// Pulisci eventuali opzioni esistenti (per sicurezza)
+monthSelect.innerHTML = '';
+
+// Popola il selettore con gli ultimi 12 mesi, includendo il mese corrente
 for (let i = 0; i < 12; i++) {
   let d = new Date(now.getFullYear(), now.getMonth() - i, 1);
   let optionText = d.toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
   let option = document.createElement('option');
   option.value = d.getFullYear() + '-' + ((d.getMonth() + 1).toString().padStart(2, '0'));
   option.textContent = optionText;
-  monthInput.appendChild(option);
+  monthSelect.appendChild(option);
 }
+
+// Imposta il mese predefinito al mese corrente
+const defaultMonth = now.getFullYear() + '-' + ((now.getMonth() + 1).toString().padStart(2, '0'));
+monthSelect.value = defaultMonth;
 
 // Funzione per calcolare le ore lavorate per un dipendente in un mese
 function calculateHoursForEmployee(employee, monthStr) {
@@ -64,21 +70,21 @@ function calculateHoursForEmployee(employee, monthStr) {
 
 // Funzione per aggiornare il riepilogo ore in base al mese selezionato
 function updateHours() {
-  const monthStr = monthInput.value;
+  const monthStr = monthSelect.value;
   const { totalHours, sundayHours } = calculateHoursForEmployee(employeeName, monthStr);
   document.getElementById('total-hours').textContent = `Totale ore lavorate: ${totalHours} ore`;
   document.getElementById('sunday-hours').textContent = `Totale ore di domenica: ${sundayHours} ore`;
 }
 
 // Aggiungi un listener per aggiornare il riepilogo ogni volta che l'utente cambia il mese
-monthInput.addEventListener('change', updateHours);
+monthSelect.addEventListener('change', updateHours);
 
 // Aggiorna subito il riepilogo al caricamento della pagina
 updateHours();
 
 // Gestione del pulsante "Indietro":
-// Se l'utente proviene da "ore-dipendenti", torna alla sezione "Ore Dipendenti" (es. index.html#hours-section)
-// Altrimenti, usa history.back()
+// Se l'utente proviene da "ore-dipendenti", torna alla pagina "Ore Dipendenti" (es. index.html#hours-section)
+// Altrimenti utilizza history.back()
 document.getElementById('back-btn').addEventListener('click', () => {
   if (previousPage === 'ore-dipendenti') {
     window.location.href = 'index.html#hours-section';
