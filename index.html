@@ -4,103 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gestionale Turni Dipendenti</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-  
-  <!-- Libreria calendario -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/vendor/css/flatpickr.min.css" />
+  <script src="assets/vendor/js/jspdf.umd.min.js"></script>
+  <script src="assets/vendor/js/jspdf.plugin.autotable.min.js"></script>
+  <script src="assets/vendor/js/flatpickr.min.js"></script>
 </head>
 <body>
   <div class="container">
     <h1>Gestione Turni Dipendenti</h1>
-
-    <!-- Menu in alto a destra -->
     <nav id="main-menu">
-      <button id="menu-button">☰ Menu</button>
-      <div id="menu-dropdown" class="hidden">
-        <button data-target="calendar-section">Calendario Turni</button>
-        <button data-target="employee-section">Dipendenti</button>
-        <button data-target="hours-section">Ore Dipendenti</button>
-        <button data-target="cleanup-section">Pulizia Dati</button>
+      <button id="menu-button" aria-haspopup="true" aria-expanded="false">☰ Menu</button>
+      <div id="menu-dropdown" class="hidden" role="menu">
+        <a href="#home" data-route="#home" role="menuitem">Home</a>
+        <a href="#calendar" data-route="#calendar" role="menuitem">Calendario Turni</a>
+        <a href="#employees" data-route="#employees" role="menuitem">Dipendenti</a>
+        <a href="#hours" data-route="#hours" role="menuitem">Ore Dipendenti</a>
+        <a href="#cleanup" data-route="#cleanup" role="menuitem">Pulizia Dati</a>
       </div>
     </nav>
-
-    <!-- Sezione di navigazione della settimana -->
-    <section id="week-navigation">
-      <!-- RIGA 1: Bottone calendario per aprire/chiudere il popup -->
-      <div class="calendar-icon-container">
-        <button id="calendar-icon">📅</button>
-      </div>
-      <!-- RIGA 2: Calendario Popup (inizialmente nascosto) -->
-      <div class="calendar-popup hidden" id="calendar-popup">
-        <input id="calendar-selector" type="text" />
-      </div>
-      <!-- RIGA 3: Frecce e data corrente -->
-      <div class="date-row">
-        <button id="prev-week">&#9664;</button>
-        <div class="current-date" id="current-week-label">12/04/2025 - 18/04/2025</div>
-        <button id="next-week">&#9654;</button>
-      </div>
-      <!-- RIGA 4: Bottone "Oggi" -->
-      <div class="today-btn">
-        <button id="today">Oggi</button>
-      </div>
-    </section>
-
-    <!-- Sezione Calendario Turni -->
-    <section id="calendar-section">
-      <h2>Calendario Turni</h2>
-      <div id="calendar"></div>
-    </section>
-
-    <!-- Sezione Dipendenti -->
-    <section id="employee-section" class="hidden">
-      <h2>Aggiungi Dipendente</h2>
-      <label for="employee-name">Nome:</label>
-      <input type="text" id="employee-name" placeholder="Nome dipendente" />
-      <button id="add-employee">Aggiungi</button>
-      <ul id="employee-list"></ul>
-    </section>
-
-    <!-- Sezione Ore Dipendenti -->
-    <section id="hours-section" class="hidden">
-      <h2>Ore Lavorate</h2>
-      <div id="worked-hours"></div>
-      <!-- In questa sezione i totali sono mostrati come elementi cliccabili (vedi shifts.js) -->
-    </section>
-
-    <!-- Sezione per la visualizzazione dettagliata di un dipendente -->
-    <section id="employee-detail" class="hidden">
-      <button id="back-to-shifts">Indietro</button>
-      <h2 id="detail-employee-name">Dettaglio Dipendente</h2>
-      <label for="month-selector">Seleziona mese:</label>
-      <input type="month" id="month-selector" />
-      <div id="detail-hours">
-        <!-- Verranno visualizzati i totali -->
-      </div>
-    </section>
-
-    <!-- Sezione Pulizia Dati -->
-    <section id="cleanup-section" class="hidden">
-      <h2>Pulizia Automatica dei Dati</h2>
-      <label for="cleanup-select">Rimuovi dati più vecchi di:</label>
-      <select id="cleanup-select">
-        <option value="off">Off</option>
-        <option value="3">3 mesi</option>
-        <option value="6">6 mesi</option>
-        <option value="12">1 anno</option>
-      </select>
-    </section>
-
-    <!-- Sezione Esporta PDF -->
-    <section id="export-section">
-      <button id="export-pdf">Esporta PDF</button>
-    </section>
+    <div id="app"></div>
   </div>
-
-  <!-- Script principale -->
-  <script type="module" src="main.js"></script>
+  <script type="module" src="assets/js/router.js"></script>
+  <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>

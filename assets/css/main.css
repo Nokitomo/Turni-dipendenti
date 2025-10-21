@@ -1,0 +1,90 @@
+@import url('./components/menu.css');
+@import url('./components/week-navigation.css');
+@import url('./components/popup.css');
+@import url('./pages/home.css');
+@import url('./pages/calendar.css');
+@import url('./pages/employees.css');
+@import url('./pages/hours.css');
+@import url('./pages/cleanup.css');
+@import url('./pages/employee-details.css');
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+main,
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+h1,
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.hidden {
+  display: none !important;
+}
+
+button {
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+input[type="text"],
+input[type="month"],
+select {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  transition: border 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="month"]:focus,
+select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+#app {
+  margin-top: 2rem;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+}

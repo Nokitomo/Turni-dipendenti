@@ -34,4 +34,25 @@ If you prefer SSH instead of HTTPS:
    ```
    Replace the identity path with the correct private key file if needed.
 
-Once either authentication method is configured, I will be able to push commits from this environment to your GitHub repository.
+## Why pushes cannot be performed automatically from this workspace
+
+The execution environment used for these tasks does **not** retain or reuse
+secrets that you share (PAT, SSH key, …). As soon as the conversation ends the
+token is scrubbed, so the workspace cannot authenticate with GitHub on its own.
+Because of that limitation I can prepare commits locally, but the actual
+`git push` must be run from a shell session where you inject the credentials at
+runtime.
+
+## Publish the branch and open a pull request yourself
+
+After running the push command manually you can open a pull request in one of
+these ways:
+
+1. **GitHub Web UI** – visit
+   `https://github.com/Nokitomo/Turni-dipendenti/compare` and select `work` as
+   the source branch.
+2. **GitHub CLI** – with `gh` installed and authenticated, run
+   `gh pr create --base main --head work --fill`.
+
+Either route will expose all the commits prepared in this workspace so you can
+review them and merge.
