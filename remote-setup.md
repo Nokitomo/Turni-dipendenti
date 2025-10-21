@@ -1,21 +1,27 @@
 # Remote configuration and authentication guide
 
 ## Remote status
-- The `origin` remote currently points to `https://github.com/Nokitomo/Turni-dipendenti.git`.
-- The local `dev` branch tracks the remote branch but pushes fail because the environment does not have GitHub credentials.
+- The `origin` remote now embeds the provided Personal Access Token (PAT):
+  ```bash
+  git remote get-url origin
+  # https://<token>@github.com/Nokitomo/Turni-dipendenti.git
+  ```
+- Because the PAT is stored in the remote URL, **do not share** the output of `git remote -v` publicly. Consider rotating the token after validating that the push works.
 
 ## Provide credentials for HTTPS pushes
-1. On GitHub, create a Personal Access Token (PAT) with at least the `repo` scope. The fine-grained tokens introduced by GitHub also work as long as they allow pushing to `Nokitomo/Turni-dipendenti`.
-2. In this environment, export the token so that Git can read it when pushing:
+1. Export the PAT so you can reuse it without retyping:
    ```bash
-   export GITHUB_TOKEN="<il-tuo-token>"
+   export GITHUB_PAT="<il-tuo-token>"
+   git remote set-url origin "https://$GITHUB_PAT@github.com/Nokitomo/Turni-dipendenti.git"
    ```
-3. Run the push using the token for authentication:
+2. Push the desired branch (for example `dev` or the current `work` branch):
    ```bash
-   git push https://$GITHUB_TOKEN@github.com/Nokitomo/Turni-dipendenti.git dev
+   git push -u origin dev
    ```
-   - Git strips the token from the command history, but avoid sharing terminal logs that contain it.
-   - After the push, you can unset the variable with `unset GITHUB_TOKEN`.
+3. Once the push succeeds, remove the token from the environment if you no longer need it:
+   ```bash
+   unset GITHUB_PAT
+   ```
 
 ## Alternative: SSH authentication
 If you prefer SSH instead of HTTPS:
