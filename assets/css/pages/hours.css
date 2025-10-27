@@ -1,0 +1,21 @@
+#worked-hours {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #eef5fc;
+  border-radius: 8px;
+  min-height: 100px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.employee-item {
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  background-color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.employee-item:hover {
+  background-color: #e3f2fd;
+}

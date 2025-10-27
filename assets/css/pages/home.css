@@ -1,0 +1,10 @@
+.home-page {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.home-page p {
+  font-size: 1.05rem;
+}

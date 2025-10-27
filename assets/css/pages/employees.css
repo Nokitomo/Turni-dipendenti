@@ -8,6 +8,7 @@
   border-radius: 6px;
   background-color: #fafafa;
 }
+
 #employee-list li {
   padding: 0.75rem;
   background-color: #fff;
@@ -16,5 +17,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#employee-list li button {
+  background-color: #e74c3c;
+  margin-left: 1rem;
+}
+
+#employee-list li button:hover {
+  background-color: #c0392b;
 }

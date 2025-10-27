@@ -1,0 +1,23 @@
+#employee-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+#employee-detail h2 {
+  margin-bottom: 0.5rem;
+}
+
+#month-selector {
+  min-width: 220px;
+}
+
+#detail-hours p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.back-button {
+  align-self: flex-start;
+}
